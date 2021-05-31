@@ -1,0 +1,12 @@
+{
+  "name": "Prac2-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jalmanzal/Prac2-backend.git",
+  "author": "Jesus Fernando Almanza Loredo <jf_almanza0025@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
+  }
+}
