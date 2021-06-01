@@ -6,7 +6,29 @@
   "author": "Jesus Fernando Almanza Loredo <jf_almanza0025@hotmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/koa": "^2.13.3",
+    "@types/prettier": "^2.2.3",
+    "express": "^4.17.1",
+    "koa": "^2.13.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.0.0",
+    "koa2-cors": "^2.0.6",
+    "prettier": "^2.3.0",
     "sequelize": "^6.6.2",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "awilix-koa": "^4.0.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "koa-bodyparser": "^4.3.0"
+  },
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon index",
+    "test": "mocha --exit",
+    "build": "tsc --build",
+    "lint": "eslint ."
   }
 }
