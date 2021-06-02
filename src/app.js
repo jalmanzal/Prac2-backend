@@ -9,13 +9,15 @@ const koa2_cors_1 = __importDefault(require("koa2-cors"));
 const koa_logger_1 = __importDefault(require("koa-logger"));
 // Assets
 const hola_1 = __importDefault(require("./routes/hola"));
+const nuevoUsuario_1 = __importDefault(require("./routes/nuevoUsuario"));
 const APP = new koa_1.default();
 const PORT = process.env.PUERTO || 3000;
 // Middlewares
-APP.use(koa_bodyparser_1.default());
-APP.use(koa2_cors_1.default({ origin: "*" }));
-APP.use(koa_logger_1.default());
-APP.use(hola_1.default.routes());
+APP.use(koa_bodyparser_1.default())
+    .use(koa2_cors_1.default({ origin: "*" }))
+    .use(koa_logger_1.default())
+    .use(hola_1.default.routes())
+    .use(nuevoUsuario_1.default.routes());
 // Creacion del servidor
 const SERVER = APP.listen(PORT, async () => console.log(`Server listening on port ${PORT}`)).on("error", (err) => console.log(err));
 module.exports = SERVER;

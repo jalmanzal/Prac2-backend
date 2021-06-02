@@ -7,15 +7,17 @@ import logger from "koa-logger";
 
 // Assets
 import hola from "./routes/hola";
+import nuevoUsuario from "./routes/nuevoUsuario";
 
 const APP: Koa = new Koa();
 const PORT: string | number = process.env.PUERTO || 3000;
 
 // Middlewares
-APP.use(bodyParser());
-APP.use(cors({ origin: "*" }));
-APP.use(logger());
-APP.use(hola.routes());
+APP.use(bodyParser())
+  .use(cors({ origin: "*" }))
+  .use(logger())
+  .use(hola.routes())
+  .use(nuevoUsuario.routes());
 
 // Creacion del servidor
 const SERVER = APP.listen(PORT, async () =>
