@@ -10,8 +10,8 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("Prueba 1", () => {
-  it("Debe de crear el usuario ", async () => {
-    const res = await chai
+  it("Debe de crear el usuario ", (done) => {
+    chai
       .request(server)
       .post("/nuevo-usuario")
       .type("form")
@@ -23,22 +23,31 @@ describe("Prueba 1", () => {
         nss: "666666666666666",
         edad: 3,
         password: "123456",
+      })
+      .end((err, res) => {
+        res.status.should.equal(201);
+        res.type.should.equal("application/json");
+        res.body.message.should.eql("Se ha creado el usuario con exito!");
+        done();
       });
-    res.should.have.status(201);
-    JSON.parse(res.text)
-      .should.have.property("message")
-      .eq("Se creó el usuario con exito!");
-  }).timeout(1000);
+  });
 });
 
 describe("Prueba 2", () => {
-  it("Al iniciar sesion debe de devolver la lista de usuarios", async () => {
-    const res = await chai.request(server).post("/login").type("form").send({
-      correo: "prueba@mail.com",
-      password: "123456",
-    });
-    res.should.have.status(202);
-    JSON.parse(res.text).should.have.property("message").eq("Acceso correcto!");
-    JSON.parse(res.text).should.have.property("usuarios");
-  }).timeout(1000);
+  it("Al iniciar sesion debe de devolver la lista de usuarios", (done) => {
+    chai
+      .request(server)
+      .post("/login")
+      .type("form")
+      .send({
+        correo: "prueba@mail.com",
+        password: "123456",
+      })
+      .end((err, res) => {
+        res.status.should.equal(202);
+        res.body.should.have.property("message").eq("Acceso correcto!");
+        res.body.should.have.property("usuarios");
+        done();
+      });
+  });
 });
