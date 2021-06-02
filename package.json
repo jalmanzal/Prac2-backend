@@ -10,6 +10,7 @@
     "@types/prettier": "^2.2.3",
     "express": "^4.17.1",
     "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "koa2-cors": "^2.0.6",
