@@ -1,8 +1,10 @@
+import UserDTO from '../DTO/UserDTO';
+
 export default interface ITransaction {
-  usrDTO: any
+  usrDTO: UserDTO
 
   /**
    * Perform a implemented operation
    */
-  exec(): any;
+  exec(): Promise<[number, object]>;
 };
