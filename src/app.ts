@@ -6,7 +6,7 @@ import cors from 'koa2-cors';
 import logger from 'koa-logger';
 
 // Assets
-import hola from './routes/hola';
+import login from './routes/login';
 import newUser from './routes/newUser';
 
 const APP: Koa = new Koa();
@@ -16,7 +16,7 @@ const PORT: string | number = process.env.PORT || 3000;
 APP.use(bodyParser())
   .use(cors({ origin: '*' }))
   .use(logger())
-  .use(hola.routes())
+  .use(login.routes())
   .use(newUser.routes());
 
 // Creacion del servidor
