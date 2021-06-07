@@ -15,23 +15,35 @@ class SaveData {
     // eslint-disable-next-line class-methods-use-this
     async exec() {
         try {
-            const USER = {
-                name: this.usrDTO.getName(),
-                lastName: this.usrDTO.getLastName(),
-                motherLastName: this.usrDTO.getMotherLastName(),
-                age: this.usrDTO.getAge(),
-                email: this.usrDTO.getEmail(),
-                ssn: this.usrDTO.getSsn(),
-            };
-            const CREDENTIAL = {
-                email: this.usrDTO.getEmail(),
-                password: this.usrDTO.getPassword(),
-            };
-            await models_1.default.Users.create(USER);
-            await models_1.default.Credentials.create(CREDENTIAL);
-            return [201, {
-                    status: 'Success',
-                    message: `Se ha guardado el usuario ${this.usrDTO.getName()} con éxito!`,
+            const VALIDATION = await models_1.default.Users.findOne({
+                where: {
+                    email: this.usrDTO.getEmail(),
+                    ssn: this.usrDTO.getSsn(),
+                },
+            });
+            if (VALIDATION === null) {
+                const USER = {
+                    name: this.usrDTO.getName(),
+                    lastName: this.usrDTO.getLastName(),
+                    motherLastName: this.usrDTO.getMotherLastName(),
+                    age: this.usrDTO.getAge(),
+                    email: this.usrDTO.getEmail(),
+                    ssn: this.usrDTO.getSsn(),
+                };
+                const CREDENTIAL = {
+                    email: this.usrDTO.getEmail(),
+                    password: this.usrDTO.getPassword(),
+                };
+                await models_1.default.Users.create(USER);
+                await models_1.default.Credentials.create(CREDENTIAL);
+                return [201, {
+                        status: 'Success',
+                        message: `Se ha guardado el usuario ${this.usrDTO.getName()} con éxito!`,
+                    }];
+            }
+            return [409, {
+                    status: 'Conflict',
+                    message: `Los datos del usuario ${this.usrDTO.getName()} ya existen!`,
                 }];
         }
         catch (err) {
