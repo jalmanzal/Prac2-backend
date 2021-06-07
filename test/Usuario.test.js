@@ -170,6 +170,29 @@ describe('Creación de usuario', () => {
         done();
       });
   });
+
+  it('Debe de dar error por que el usuario ya existe', (done) => {
+    const nombre = 'Mocha';
+    chai
+      .request(server)
+      .post('/users')
+      .type('form')
+      .send({
+        name: nombre,
+        lastName: 'Mocha',
+        motherLastName: '',
+        ssn: '666666666666666',
+        age: 3,
+        email: 'prueba@mail.com',
+        password: '123456',
+      })
+      .end((err, res) => {
+        res.status.should.equal(409);
+        res.type.should.equal('application/json');
+        res.body.message.should.eql(`Los datos del usuario ${nombre} ya existen!`);
+        done();
+      });
+  });
 });
 
 describe('Inicio de sesión', () => {
@@ -179,13 +202,13 @@ describe('Inicio de sesión', () => {
       .post('/login')
       .type('form')
       .send({
-        correo: 'prueba@mail.com',
+        email: 'prueba@mail.com',
         password: '123456',
       })
       .end((err, res) => {
         res.status.should.equal(202);
         res.body.should.have.property('message').eq('Acceso correcto!');
-        res.body.should.have.property('usuarios');
+        res.body.should.have.property('users');
         done();
       });
   });
@@ -196,12 +219,12 @@ describe('Inicio de sesión', () => {
       .post('/login')
       .type('form')
       .send({
-        correo: 'prueba@mail.com',
+        email: 'prueba@mail.com',
         password: '12346',
       })
       .end((err, res) => {
         res.status.should.equal(401);
-        res.body.should.have.property('message').eq('Contraseña incorrecta!');
+        res.body.should.have.property('message').eq('Credenciales invalidas, intente de nuevo por favor!');
         done();
       });
   });
@@ -212,12 +235,44 @@ describe('Inicio de sesión', () => {
       .post('/login')
       .type('form')
       .send({
-        correo: 'prueba2@mail.com',
+        email: 'prueba2@mail.com',
         password: '12346',
       })
       .end((err, res) => {
         res.status.should.equal(401);
-        res.body.should.have.property('message').eq('Usuario inexistente!');
+        res.body.should.have.property('message').eq('Credenciales invalidas, intente de nuevo por favor!');
+        done();
+      });
+  });
+
+  it('Debe dar error por correo vacío', (done) => {
+    chai
+      .request(server)
+      .post('/login')
+      .type('form')
+      .send({
+        email: '',
+        password: '12346',
+      })
+      .end((err, res) => {
+        res.status.should.equal(400);
+        res.body.should.have.property('message').eq('El campo correo no puede ir vacío!');
+        done();
+      });
+  });
+
+  it('Debe dar error por contraseña vacía', (done) => {
+    chai
+      .request(server)
+      .post('/login')
+      .type('form')
+      .send({
+        email: 'prueba@mail.com',
+        password: '',
+      })
+      .end((err, res) => {
+        res.status.should.equal(400);
+        res.body.should.have.property('message').eq('El campo contraseña no puede ir vacío!');
         done();
       });
   });
