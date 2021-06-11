@@ -13,35 +13,43 @@ export default class ReadData implements ITransaction {
     /**
    * Find from database email and password, if it exist, return a list with all users
    * else, it trows an error
-   * It get data from DTO instance
+   * It get some data from DTO instance
    */
     // eslint-disable-next-line class-methods-use-this
     async exec(): Promise<[number, object]> {
       try {
-        const CREDENTIALS: any = await db.Credentials.findOne({
+        const EMAIL: any = await db.Users.findOne({
           where: {
             email: this.usrDTO.getEmail(),
-            password: this.usrDTO.getPassword(),
           },
         });
 
-        if (CREDENTIALS !== null) {
-          const USERS = await db.Users.findAll();
+        if (EMAIL !== null) {
+          const CREDENTIALS: any = await db.Credentials.findOne({
+            where: {
+              userId: EMAIL.dataValues.id,
+              password: this.usrDTO.getPassword(),
+            },
+          });
 
-          const OUTPUT = USERS.map((i) => ({
-            name: i.dataValues.name,
-            lastName: i.dataValues.lastName,
-            motherLastName: i.dataValues.motherLastName,
-            age: i.dataValues.age,
-            email: i.dataValues.email,
-            ssn: i.dataValues.ssn,
-          }));
+          if (CREDENTIALS !== null) {
+            const USERS: any = await db.Users.findAll();
 
-          return [202, {
-            status: 'Success',
-            message: 'Acceso correcto!',
-            users: OUTPUT,
-          }];
+            const OUTPUT: [object] = USERS.map((i) => ({
+              name: i.dataValues.name,
+              lastName: i.dataValues.lastName,
+              motherLastName: i.dataValues.motherLastName,
+              age: i.dataValues.age,
+              email: i.dataValues.email,
+              ssn: i.dataValues.ssn,
+            }));
+
+            return [202, {
+              status: 'Success',
+              message: 'Acceso correcto!',
+              users: OUTPUT,
+            }];
+          }
         }
         return [401, {
           status: 'Error',

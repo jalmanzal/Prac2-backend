@@ -11,32 +11,39 @@ class ReadData {
     /**
    * Find from database email and password, if it exist, return a list with all users
    * else, it trows an error
-   * It get data from DTO instance
+   * It get some data from DTO instance
    */
     // eslint-disable-next-line class-methods-use-this
     async exec() {
         try {
-            const CREDENTIALS = await models_1.default.Credentials.findOne({
+            const EMAIL = await models_1.default.Users.findOne({
                 where: {
                     email: this.usrDTO.getEmail(),
-                    password: this.usrDTO.getPassword(),
                 },
             });
-            if (CREDENTIALS !== null) {
-                const USERS = await models_1.default.Users.findAll();
-                const OUTPUT = USERS.map((i) => ({
-                    name: i.dataValues.name,
-                    lastName: i.dataValues.lastName,
-                    motherLastName: i.dataValues.motherLastName,
-                    age: i.dataValues.age,
-                    email: i.dataValues.email,
-                    ssn: i.dataValues.ssn,
-                }));
-                return [202, {
-                        status: 'Success',
-                        message: 'Acceso correcto!',
-                        users: OUTPUT,
-                    }];
+            if (EMAIL !== null) {
+                const CREDENTIALS = await models_1.default.Credentials.findOne({
+                    where: {
+                        userId: EMAIL.dataValues.id,
+                        password: this.usrDTO.getPassword(),
+                    },
+                });
+                if (CREDENTIALS !== null) {
+                    const USERS = await models_1.default.Users.findAll();
+                    const OUTPUT = USERS.map((i) => ({
+                        name: i.dataValues.name,
+                        lastName: i.dataValues.lastName,
+                        motherLastName: i.dataValues.motherLastName,
+                        age: i.dataValues.age,
+                        email: i.dataValues.email,
+                        ssn: i.dataValues.ssn,
+                    }));
+                    return [202, {
+                            status: 'Success',
+                            message: 'Acceso correcto!',
+                            users: OUTPUT,
+                        }];
+                }
             }
             return [401, {
                     status: 'Error',
