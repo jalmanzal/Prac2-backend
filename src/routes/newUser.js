@@ -39,11 +39,7 @@ router.post('/users', async (ctx) => {
          * Save information and get an array with code and JSON to respond depending of status
          * @param USERDTO
          */
-        const RESPONSE = await new SaveData_1.default(USERDTO).exec();
-        // eslint-disable-next-line prefer-destructuring
-        ctx.status = RESPONSE[0];
-        // eslint-disable-next-line prefer-destructuring
-        ctx.body = RESPONSE[1];
+        [ctx.status, ctx.body] = await new SaveData_1.default(USERDTO).exec();
     }
 });
 exports.default = router;

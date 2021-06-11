@@ -4,8 +4,8 @@ import ReadData from '../../controller/ReadData';
 
 const router: Router = new Router();
 
-router.post('/login', async (ctx) => {
-  const DATOS = ctx.request.body;
+router.post('/login', async (ctx: any) => {
+  const DATOS: any = ctx.request.body;
   /**
    * Validates if fields have content
    */
@@ -27,12 +27,7 @@ router.post('/login', async (ctx) => {
      * Read information and get an array with code and JSON to respond depending of status
      * @param USERDTO
      */
-    const RESPONSE: [number, object] = await new ReadData(USERDTO).exec();
-
-    // eslint-disable-next-line prefer-destructuring
-    ctx.status = RESPONSE[0];
-    // eslint-disable-next-line prefer-destructuring
-    ctx.body = RESPONSE[1];
+    [ctx.status, ctx.body] = await new ReadData(USERDTO).exec();
   }
 });
 
