@@ -11,12 +11,13 @@ export default class SaveData implements ITransaction {
 
   /**
    * Perform a save to database into both tables
-   * It get data from DTO instance
+   * It get some data from DTO instance
    */
   // eslint-disable-next-line class-methods-use-this
   async exec(): Promise<[number, object]> {
     try {
-      const VALIDATION = await db.Users.findOne({
+      let CONSECUTIVE: number = (await db.Credentials.findAll()).length;
+      const VALIDATION: object = await db.Users.findOne({
         where: {
           email: this.usrDTO.getEmail(),
           ssn: this.usrDTO.getSsn(),
@@ -32,8 +33,9 @@ export default class SaveData implements ITransaction {
           email: this.usrDTO.getEmail(),
           ssn: this.usrDTO.getSsn(),
         };
-        const CREDENTIAL = {
-          email: this.usrDTO.getEmail(),
+        const CREDENTIAL: object = {
+          // eslint-disable-next-line no-plusplus
+          userId: ++CONSECUTIVE,
           password: this.usrDTO.getPassword(),
         };
 
@@ -49,7 +51,7 @@ export default class SaveData implements ITransaction {
         status: 'Conflict',
         message: `Los datos del usuario ${this.usrDTO.getName()} ya existen!`,
       }];
-    } catch (err) {
+    } catch (err: any) {
       return [500, {
         status: 'Error',
         message: 'Ha ocurrido un error fatal!',

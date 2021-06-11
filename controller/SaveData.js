@@ -15,6 +15,7 @@ class SaveData {
     // eslint-disable-next-line class-methods-use-this
     async exec() {
         try {
+            let CONSECUTIVE = (await models_1.default.Credentials.findAll()).length;
             const VALIDATION = await models_1.default.Users.findOne({
                 where: {
                     email: this.usrDTO.getEmail(),
@@ -31,7 +32,8 @@ class SaveData {
                     ssn: this.usrDTO.getSsn(),
                 };
                 const CREDENTIAL = {
-                    email: this.usrDTO.getEmail(),
+                    // eslint-disable-next-line no-plusplus
+                    userId: ++CONSECUTIVE,
                     password: this.usrDTO.getPassword(),
                 };
                 await models_1.default.Users.create(USER);
@@ -47,6 +49,7 @@ class SaveData {
                 }];
         }
         catch (err) {
+            console.error(err);
             return [500, {
                     status: 'Error',
                     message: 'Ha ocurrido un error fatal!',
